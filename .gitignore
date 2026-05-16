@@ -1,1 +1,5 @@
 ffmpeg.exe 
+__pycache__/ 
+*.pyc 
+test_hearing.mp3 
+test_hearing_transcript.json 
