@@ -1,0 +1,15 @@
+{
+  "file_name": "test_hearing.mp3",
+  "language": "en",
+  "duration": 3.6,
+  "full_text": "The defendant must submit evidence within 14 days.",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 3.6,
+      "text": "The defendant must submit evidence within 14 days.",
+      "speaker": null
+    }
+  ],
+  "model_used": "base"
+}
