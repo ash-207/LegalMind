@@ -132,25 +132,25 @@ Return ONLY this JSON structure (no markdown, no extra text):
 #     def complete(self, prompt: str) -> str:
 #         response = self.model.generate_content(prompt)
 #         return response.text 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
-class GeminiBackend:
-    def __init__(self, api_key: str = None, model: str = "gemini-2.0-flash"):
-        try:
-            from google import genai
-        except ImportError:
-            raise ImportError("Run: pip install google-genai")
-
-        key = api_key or os.environ.get("GEMINI_API_KEY")
-        if not key:
-            raise ValueError("GEMINI_API_KEY not set")
-        self.client = genai.Client(api_key=key)
-        self.model = model
-
-    def complete(self, prompt: str) -> str:
-        response = self.client.models.generate_content(
-            model=self.model,
-            contents=SYSTEM_PROMPT + "\n\n" + prompt,
-        )
-        return response.text
+#class GeminiBackend:
+#   def __init__(self, api_key: str = None, model: str = "gemini-2.0-flash"):
+#       try:
+#           from google import genai
+#       except ImportError:
+#           raise ImportError("Run: pip install google-genai")
+#
+#       key = api_key or os.environ.get("GEMINI_API_KEY")
+#       if not key:
+#           raise ValueError("GEMINI_API_KEY not set")
+#       self.client = genai.Client(api_key=key)
+#       self.model = model
+#
+#   def complete(self, prompt: str) -> str:
+#       response = self.client.models.generate_content(
+#           model=self.model,
+#           contents=SYSTEM_PROMPT + "\n\n" + prompt,
+#       )
+#       return response.text
 
 class OllamaBackend:
     """
@@ -233,7 +233,6 @@ class LegalSummarizer:
     """
 
     BACKENDS = {
-        "gemini": GeminiBackend,
         "ollama": OllamaBackend,
         "openai": OpenAIBackend,
     }
@@ -447,6 +446,30 @@ def transcribe_and_summarize(
 
     return transcript, summary
 
+    # ─── Simple Wrapper Function ──────────────────────────────────────────────────
+
+def summarize_text(text: str) -> str:
+    """
+    Simple interface required by external modules.
+
+    Input:
+        text (str) -> transcript text
+
+    Returns:
+        str -> summarized hearing report
+    """
+
+    summarizer = LegalSummarizer(
+        backend="openai",
+    api_key="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",    model="llama-3.1-8b-instant",
+    base_url="https://api.groq.com/openai/v1"
+    )
+
+    summary = summarizer.summarize(text)
+
+    # IMPORTANT:
+    # Return STRING, do not print
+    return summarizer.to_text(summary)
 
 # ─── Quick Test ───────────────────────────────────────────────────────────────
 

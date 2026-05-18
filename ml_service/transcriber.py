@@ -271,6 +271,30 @@ def create_fastapi_router():
 
     return router
 
+    # ─── Simple Wrapper Function ──────────────────────────────────────────────────
+
+def transcribe_audio(file_path: str) -> str:
+    """
+    Simple interface required by external modules.
+
+    Input:
+        file_path (str) -> path to audio file
+
+    Returns:
+        str -> full transcript text
+    """
+
+    transcriber = LegalTranscriber(
+        model_size="base"
+    )
+
+    result = transcriber.transcribe(file_path)
+
+    # IMPORTANT:
+    # Return STRING only
+    # Do NOT print anything
+    return result.full_text
+
 
 # ─── Quick Test ───────────────────────────────────────────────────────────────
 
