@@ -9,6 +9,7 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import jar.client.FastApiClient;
 import jar.dto.DocumentResponse;
 import jar.model.LegalDocument;
 import jar.model.User;
@@ -24,6 +25,8 @@ public class LegalDocumentService {
     private final LegalDocumentRepository repository;
 
     private final UserRepository userRepository;
+
+    private final FastApiClient fastApiClient;
 
     public DocumentResponse uploadDocument(
             MultipartFile file,
@@ -83,14 +86,10 @@ String filePath =
         document.setOriginalText(extractedText);
 
         // Temporary summary
-        String summary =
-                extractedText.substring(
-                        0,
-                        Math.min(
-                                300,
-                                extractedText.length()
-                        )
-                );
+       String summary =
+        fastApiClient.generateSummary(
+                extractedText
+        );
 
         document.setSummary(summary);
 
