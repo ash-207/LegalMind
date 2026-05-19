@@ -12,6 +12,8 @@ from dataclasses import dataclass, asdict, field
 from typing import Optional
 from datetime import datetime
 
+from bleach import clean
+
 
 # ─── Data Models ──────────────────────────────────────────────────────────────
 
@@ -294,26 +296,56 @@ class LegalSummarizer:
         except json.JSONDecodeError as e:
             raise ValueError(f"LLM returned invalid JSON: {e}\nRaw:\n{raw[:500]}")
 
+    # def _build_summary(self, data: dict) -> HearingSummary:
+    #     """Map raw dict → typed HearingSummary dataclass."""
+    #     key_decisions = [
+    #         KeyDecision(**kd) for kd in data.get("key_decisions", [])
+    #     ]
+    #     action_items = [
+    #         ActionItem(**ai) for ai in data.get("action_items", [])
+    #     ]
+    #     return HearingSummary(
+    #         case_id=data.get("case_id"),
+    #         hearing_date=data.get("hearing_date"),
+    #         court=data.get("court"),
+    #         parties=data.get("parties", []),
+    #         judges=data.get("judges", []),
+    #         lawyers=data.get("lawyers", []),
+    #         summary=data.get("summary", ""),
+    #         key_decisions=key_decisions,
+    #         action_items=action_items,
+    #         next_hearing_date=data.get("next_hearing_date"),
+    #         next_hearing_court=data.get("next_hearing_court"),
+    #         risk_flags=data.get("risk_flags", []),
+    #         legal_sections_cited=data.get("legal_sections_cited", []),
+    #         sentiment=data.get("sentiment", "Neutral"),
+    #     )
+
     def _build_summary(self, data: dict) -> HearingSummary:
-        """Map raw dict → typed HearingSummary dataclass."""
-        key_decisions = [
-            KeyDecision(**kd) for kd in data.get("key_decisions", [])
-        ]
+    # Clean "null" strings → None
+        def clean(val):
+            if val == "null" or val == "None" or val == "":
+                return None
+            return val
+
+        key_decisions = [KeyDecision(**kd) for kd in data.get("key_decisions", [])]
+        # action_items = [ActionItem(**ai) for ai in data.get("action_items", [])]
         action_items = [
-            ActionItem(**ai) for ai in data.get("action_items", [])
+            ActionItem(**{**ai, "deadline": clean(ai.get("deadline"))})
+            for ai in data.get("action_items", [])
         ]
         return HearingSummary(
-            case_id=data.get("case_id"),
-            hearing_date=data.get("hearing_date"),
-            court=data.get("court"),
+            case_id=clean(data.get("case_id")),
+            hearing_date=clean(data.get("hearing_date")),
+            court=clean(data.get("court")),
             parties=data.get("parties", []),
             judges=data.get("judges", []),
             lawyers=data.get("lawyers", []),
             summary=data.get("summary", ""),
             key_decisions=key_decisions,
             action_items=action_items,
-            next_hearing_date=data.get("next_hearing_date"),
-            next_hearing_court=data.get("next_hearing_court"),
+            next_hearing_date=clean(data.get("next_hearing_date")),
+            next_hearing_court=clean(data.get("next_hearing_court")),
             risk_flags=data.get("risk_flags", []),
             legal_sections_cited=data.get("legal_sections_cited", []),
             sentiment=data.get("sentiment", "Neutral"),
@@ -327,54 +359,103 @@ class LegalSummarizer:
             print(f"[Summarizer] Saved: {output_path}")
         return json_str
 
+    # def to_text(self, summary: HearingSummary) -> str:
+    #     """Human-readable summary report."""
+    #     lines = [
+    #         "=" * 50,
+    #         "  LEGAL HEARING INTELLIGENCE REPORT",
+    #         "=" * 50,
+    #         f"Case ID      : {summary.case_id or 'Unknown'}",
+    #         f"Date         : {summary.hearing_date or 'Unknown'}",
+    #         f"Court        : {summary.court or 'Unknown'}",
+    #         f"Parties      : {', '.join(summary.parties) or 'Unknown'}",
+    #         f"Judge(s)     : {', '.join(summary.judges) or 'Unknown'}",
+    #         f"Sentiment    : {summary.sentiment}",
+    #         "",
+    #         "── SUMMARY ─────────────────────────────────",
+    #         summary.summary,
+    #         "",
+    #         "── KEY DECISIONS ───────────────────────────",
+    #     ]
+    #     for i, kd in enumerate(summary.key_decisions, 1):
+    #         lines.append(f"  {i}. [{kd.made_by}] {kd.decision}")
+
+    #     lines += ["", "── ACTION ITEMS ────────────────────────────"]
+    #     for i, ai in enumerate(summary.action_items, 1):
+    #         deadline = f" | Due: {ai.deadline}" if ai.deadline else ""
+    #         lines.append(f"  {i}. [{ai.priority.upper()}] {ai.task}")
+    #         lines.append(f"     → Assigned: {ai.assigned_to}{deadline}")
+    #         if ai.source_quote:
+    #             lines.append(f"     → Source: \"{ai.source_quote}\"")
+
+    #     lines += ["", "── RISK FLAGS ──────────────────────────────"]
+    #     for flag in summary.risk_flags:
+    #         lines.append(f"  ⚠ {flag}")
+
+    #     lines += ["", "── LEGAL SECTIONS CITED ────────────────────"]
+    #     lines.append("  " + ", ".join(summary.legal_sections_cited) if summary.legal_sections_cited else "  None detected")
+
+    #     if summary.next_hearing_date:
+    #         lines += [
+    #             "",
+    #             "── NEXT HEARING ────────────────────────────",
+    #             f"  Date  : {summary.next_hearing_date}",
+    #             f"  Court : {summary.next_hearing_court or 'Same court'}",
+    #         ]
+
+    #     lines.append("=" * 50)
+    #     return "\n".join(lines)
+
     def to_text(self, summary: HearingSummary) -> str:
-        """Human-readable summary report."""
         lines = [
             "=" * 50,
             "  LEGAL HEARING INTELLIGENCE REPORT",
             "=" * 50,
-            f"Case ID      : {summary.case_id or 'Unknown'}",
-            f"Date         : {summary.hearing_date or 'Unknown'}",
-            f"Court        : {summary.court or 'Unknown'}",
-            f"Parties      : {', '.join(summary.parties) or 'Unknown'}",
-            f"Judge(s)     : {', '.join(summary.judges) or 'Unknown'}",
-            f"Sentiment    : {summary.sentiment}",
-            "",
-            "── SUMMARY ─────────────────────────────────",
-            summary.summary,
-            "",
-            "── KEY DECISIONS ───────────────────────────",
         ]
-        for i, kd in enumerate(summary.key_decisions, 1):
-            lines.append(f"  {i}. [{kd.made_by}] {kd.decision}")
-
-        lines += ["", "── ACTION ITEMS ────────────────────────────"]
-        for i, ai in enumerate(summary.action_items, 1):
-            deadline = f" | Due: {ai.deadline}" if ai.deadline else ""
-            lines.append(f"  {i}. [{ai.priority.upper()}] {ai.task}")
-            lines.append(f"     → Assigned: {ai.assigned_to}{deadline}")
-            if ai.source_quote:
-                lines.append(f"     → Source: \"{ai.source_quote}\"")
-
-        lines += ["", "── RISK FLAGS ──────────────────────────────"]
-        for flag in summary.risk_flags:
-            lines.append(f"  ⚠ {flag}")
-
-        lines += ["", "── LEGAL SECTIONS CITED ────────────────────"]
-        lines.append("  " + ", ".join(summary.legal_sections_cited) if summary.legal_sections_cited else "  None detected")
-
+    
+        if summary.case_id:       lines.append(f"Case ID      : {summary.case_id}")
+        if summary.hearing_date:  lines.append(f"Date         : {summary.hearing_date}")
+        if summary.court:         lines.append(f"Court        : {summary.court}")
+        if summary.parties:       lines.append(f"Parties      : {', '.join(summary.parties)}")
+        if summary.judges:        lines.append(f"Judge(s)     : {', '.join(summary.judges)}")
+        if summary.lawyers:       lines.append(f"Lawyer(s)    : {', '.join(summary.lawyers)}")
+        if summary.sentiment:     lines.append(f"Sentiment    : {summary.sentiment}")
+    
+        if summary.summary:
+            lines += ["", "── SUMMARY ─────────────────────────────────", summary.summary]
+    
+        if summary.key_decisions:
+            lines += ["", "── KEY DECISIONS ───────────────────────────"]
+            for i, kd in enumerate(summary.key_decisions, 1):
+                lines.append(f"  {i}. [{kd.made_by}] {kd.decision}")
+                if kd.timestamp_hint: lines.append(f"     @ {kd.timestamp_hint}")
+    
+        if summary.action_items:
+            lines += ["", "── ACTION ITEMS ────────────────────────────"]
+            for i, ai in enumerate(summary.action_items, 1):
+                lines.append(f"  {i}. [{ai.priority.upper()}] {ai.task}")
+                line = f"     → Assigned: {ai.assigned_to}"
+                if ai.deadline: line += f" | Due: {ai.deadline}"
+                lines.append(line)
+                if ai.source_quote: lines.append(f"     → Source: \"{ai.source_quote}\"")
+    
+        if summary.risk_flags:
+            lines += ["", "── RISK FLAGS ──────────────────────────────"]
+            for flag in summary.risk_flags:
+                lines.append(f"  ⚠ {flag}")
+    
+        if summary.legal_sections_cited:
+            lines += ["", "── LEGAL SECTIONS CITED ────────────────────"]
+            lines.append("  " + ", ".join(summary.legal_sections_cited))
+    
         if summary.next_hearing_date:
-            lines += [
-                "",
-                "── NEXT HEARING ────────────────────────────",
-                f"  Date  : {summary.next_hearing_date}",
-                f"  Court : {summary.next_hearing_court or 'Same court'}",
-            ]
-
+            lines += ["", "── NEXT HEARING ────────────────────────────"]
+            lines.append(f"  Date  : {summary.next_hearing_date}")
+            if summary.next_hearing_court:
+                lines.append(f"  Court : {summary.next_hearing_court}")
+    
         lines.append("=" * 50)
         return "\n".join(lines)
-
-
 # ─── FastAPI Router ───────────────────────────────────────────────────────────
 
 def create_fastapi_router(backend: str = "gemini", **backend_kwargs):
