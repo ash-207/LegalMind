@@ -1,0 +1,25 @@
+.page-title { font-size: 28px; color: var(--dark-roast); margin-bottom: 6px; }
+.page-sub { color: var(--text-muted); margin-bottom: 28px; }
+
+.drop-zone {
+  border: 2px dashed var(--caramel);
+  text-align: center;
+  padding: 56px 24px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: var(--white);
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: var(--mocha);
+  background: var(--cream);
+}
+.drop-icon { font-size: 48px; display: block; margin-bottom: 16px; }
+.drop-filename { font-weight: 500; font-size: 15px; color: var(--espresso); }
+.drop-size { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+.drop-label { font-size: 16px; font-weight: 500; color: var(--espresso); }
+.drop-hint { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+.result-card { margin-top: 32px; }
+.result-meta { display: flex; gap: 8px; margin-bottom: 12px; }
+.result-title { font-size: 22px; color: var(--dark-roast); margin-bottom: 16px; }
+.result-text { color: var(--text-muted); line-height: 1.8; white-space: pre-wrap; }

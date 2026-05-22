@@ -1,0 +1,12 @@
+.list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.list-grid { display: flex; flex-direction: column; gap: 14px; }
+.list-card { display: flex; gap: 16px; align-items: flex-start; transition: transform 0.2s, box-shadow 0.2s; }
+.list-card:hover { transform: translateX(4px); box-shadow: var(--shadow); }
+.list-card-icon { font-size: 28px; }
+.list-card-body { flex: 1; }
+.list-card-title { font-size: 16px; color: var(--dark-roast); margin-bottom: 6px; }
+.list-card-preview { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
+.list-card-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+.empty-state { text-align: center; padding: 80px 24px; color: var(--text-muted); }
+.empty-state span { font-size: 48px; display: block; margin-bottom: 16px; }
+.empty-state p { font-size: 16px; margin-bottom: 24px; }

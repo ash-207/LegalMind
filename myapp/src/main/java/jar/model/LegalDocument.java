@@ -36,7 +36,7 @@ public class LegalDocument {
     @JoinColumn(name = "user_id")
     private User uploadedBy;
 
-     @PrePersist
+    @PrePersist
     public void setUploadTime() {
         this.uploadedAt = LocalDateTime.now();
 

@@ -1,0 +1,29 @@
+.dash-header { margin-bottom: 36px; }
+.dash-title { font-size: 32px; color: var(--dark-roast); }
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+.dash-card {
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: block;
+  position: relative;
+}
+.dash-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.dash-icon { font-size: 32px; display: block; margin-bottom: 14px; }
+.dash-card h3 { font-size: 18px; color: var(--dark-roast); margin-bottom: 6px; }
+.dash-card p { font-size: 13px; color: var(--text-muted); }
+.dash-arrow {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  font-size: 18px;
+  color: var(--mocha);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.dash-card:hover .dash-arrow { opacity: 1; }

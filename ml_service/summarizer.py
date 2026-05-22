@@ -413,14 +413,21 @@ class LegalSummarizer:
             "=" * 50,
         ]
     
-        if summary.case_id:       lines.append(f"Case ID      : {summary.case_id}")
-        if summary.hearing_date:  lines.append(f"Date         : {summary.hearing_date}")
-        if summary.court:         lines.append(f"Court        : {summary.court}")
-        if summary.parties:       lines.append(f"Parties      : {', '.join(summary.parties)}")
-        if summary.judges:        lines.append(f"Judge(s)     : {', '.join(summary.judges)}")
-        if summary.lawyers:       lines.append(f"Lawyer(s)    : {', '.join(summary.lawyers)}")
-        if summary.sentiment:     lines.append(f"Sentiment    : {summary.sentiment}")
-    
+        if summary.case_id:
+            lines.append(f"Case ID      : {summary.case_id}")
+        if summary.hearing_date:
+            lines.append(f"Date         : {summary.hearing_date}")
+        if summary.court:
+            lines.append(f"Court        : {summary.court}")
+        if summary.parties:
+            lines.append(f"Parties      : {', '.join(summary.parties)}")
+        if summary.judges:
+            lines.append(f"Judge(s)     : {', '.join(summary.judges)}")
+        if summary.lawyers:
+            lines.append(f"Lawyer(s)    : {', '.join(summary.lawyers)}")
+        if summary.sentiment:
+            lines.append(f"Sentiment    : {summary.sentiment}")
+
         if summary.summary:
             lines += ["", "── SUMMARY ─────────────────────────────────", summary.summary]
     
@@ -428,16 +435,19 @@ class LegalSummarizer:
             lines += ["", "── KEY DECISIONS ───────────────────────────"]
             for i, kd in enumerate(summary.key_decisions, 1):
                 lines.append(f"  {i}. [{kd.made_by}] {kd.decision}")
-                if kd.timestamp_hint: lines.append(f"     @ {kd.timestamp_hint}")
+                if kd.timestamp_hint:
+                    lines.append(f"     @ {kd.timestamp_hint}")
     
         if summary.action_items:
             lines += ["", "── ACTION ITEMS ────────────────────────────"]
             for i, ai in enumerate(summary.action_items, 1):
                 lines.append(f"  {i}. [{ai.priority.upper()}] {ai.task}")
                 line = f"     → Assigned: {ai.assigned_to}"
-                if ai.deadline: line += f" | Due: {ai.deadline}"
+                if ai.deadline:
+                    line += f" | Due: {ai.deadline}"
                 lines.append(line)
-                if ai.source_quote: lines.append(f"     → Source: \"{ai.source_quote}\"")
+                if ai.source_quote:
+                    lines.append(f"     → Source: \"{ai.source_quote}\"")
     
         if summary.risk_flags:
             lines += ["", "── RISK FLAGS ──────────────────────────────"]

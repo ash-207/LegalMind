@@ -1,0 +1,96 @@
+.landing { min-height: 100vh; }
+
+.hero {
+  text-align: center;
+  padding: 100px 24px 80px;
+  background: linear-gradient(160deg, var(--white) 0%, #eedfd5 100%);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(184,147,105,0.15) 0%, transparent 70%);
+  top: -100px; right: -100px;
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: var(--latte);
+  color: var(--espresso);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 99px;
+  margin-bottom: 28px;
+  letter-spacing: 0.04em;
+}
+
+.hero-title {
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  color: var(--dark-roast);
+}
+.hero-accent { color: var(--mocha); }
+
+.hero-sub {
+  font-size: 18px;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+  line-height: 1.7;
+}
+
+.hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+.features-section {
+  padding: 80px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 36px;
+  text-align: center;
+  color: var(--dark-roast);
+  margin-bottom: 48px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.feature-card {
+  padding: 32px 28px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--white);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+
+.feature-icon { font-size: 32px; display: block; margin-bottom: 16px; }
+.feature-card h3 { font-size: 20px; margin-bottom: 10px; color: var(--espresso); }
+.feature-card p { color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+
+.cta-section {
+  text-align: center;
+  padding: 80px 24px;
+  background: var(--espresso);
+  color: var(--cream);
+}
+.cta-section h2 { font-size: 40px; margin-bottom: 16px; color: var(--cream); }
+.cta-section p { font-size: 16px; color: var(--latte); margin-bottom: 36px; }
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 40px;
+  border-top: 1px solid var(--border);
+}
