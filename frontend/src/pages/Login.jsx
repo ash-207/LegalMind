@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../api/auth';
+//import { login } from '../api/auth';
+import { login } from "../api/authApi";
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 
@@ -14,16 +15,35 @@ export default function Login() {
   const handle = e => setForm(p => ({ ...p, [e.target.name]: e.target.value }));
 
   const submit = async e => {
+
     e.preventDefault();
-    setLoading(true); setError('');
+
+    setLoading(true);
+    setError('');
+
     try {
-      const res = await login(form);
-      loginUser(res.data.token, form.email);
-      navigate('/dashboard');
+
+        const res = await login(form);
+
+        loginUser(
+            res.token,
+            form.email
+        );
+
+        navigate('/dashboard');
+
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid credentials');
-    } finally { setLoading(false); }
-  };
+
+        setError(
+            err.response?.data?.message
+            || 'Invalid credentials'
+        );
+
+    } finally {
+
+        setLoading(false);
+    }
+};
 
   return (
     <div className="auth-page">

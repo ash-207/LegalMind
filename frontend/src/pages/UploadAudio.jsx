@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
-import { uploadAudio } from '../api/transcriptions';
+//import { uploadAudio } from '../api/transcriptions';
+import { uploadAudio } from "../api/transcriptionApi";
 import './Upload.css';
 
 const FORMATS = ['audio/mpeg','audio/wav','audio/mp4','audio/ogg','audio/flac','audio/webm'];
@@ -18,15 +19,33 @@ export default function UploadAudio() {
   };
 
   const submit = async () => {
+
+
     if (!file) return;
-    setLoading(true); setError(''); setResult(null);
+
+    setLoading(true);
+    setError('');
+    setResult(null);
+
     try {
-      const res = await uploadAudio(file);
-      setResult(res.data);
+
+        const res =
+            await uploadAudio(file);
+
+        setResult(res);
+
     } catch (err) {
-      setError(err.response?.data?.detail || 'Transcription failed.');
-    } finally { setLoading(false); }
-  };
+
+        setError(
+            err.response?.data?.detail
+            || 'Transcription failed.'
+        );
+
+    } finally {
+
+        setLoading(false);
+    }
+};
 
   return (
     <div className="page-wrap">
@@ -54,17 +73,20 @@ export default function UploadAudio() {
       </button>
 
       {result && (
-        <div className="card result-card">
-          <h2 className="result-title">Transcript</h2>
-          {result.data?.full_text && <p className="result-text">{result.data.full_text}</p>}
-          {result.data?.summary && (
-            <>
-              <h3 style={{fontSize:16,margin:'24px 0 12px',color:'var(--mocha)'}}>AI Summary</h3>
-              <p className="result-text">{result.data.summary}</p>
-            </>
-          )}
-        </div>
-      )}
+  <div className="card result-card">
+
+    <h2 className="result-title">
+      Transcript
+    </h2>
+
+    {result?.transcription && (
+      <p className="result-text">
+        {result.transcription}
+      </p>
+    )}
+
+  </div>
+)}
     </div>
   );
 }

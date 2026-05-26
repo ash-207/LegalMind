@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
-import { uploadDocument } from '../api/documents';
+//import { uploadDocument } from '../api/documents';
+import { uploadPdf } from "../api/documentApi";
 import './Upload.css';
 
 export default function UploadPDF() {
@@ -16,15 +17,25 @@ export default function UploadPDF() {
   };
 
   const submit = async () => {
+
     if (!file) return;
-    setLoading(true); setError(''); setResult(null);
+    setLoading(true);
+    setError('');
+    setResult(null);
+
     try {
-      const res = await uploadDocument(file);
-      setResult(res.data);
+        const res =
+            await uploadPdf(file);
+        setResult(res);
     } catch (err) {
-      setError(err.response?.data?.summary || 'Upload failed.');
-    } finally { setLoading(false); }
-  };
+        setError(
+            err.response?.data?.summary
+            || 'Upload failed.'
+        );
+    } finally {
+        setLoading(false);
+    }
+};
 
   return (
     <div className="page-wrap">

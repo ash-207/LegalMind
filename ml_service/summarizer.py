@@ -552,7 +552,7 @@ def summarize_text(text: str) -> str:
 
     summarizer = LegalSummarizer(
         backend="openai",
-    api_key="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",    model="llama-3.1-8b-instant",
+    api_key="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",    model="llama-3.1-8b-instant",
     base_url="https://api.groq.com/openai/v1"
     )
 
