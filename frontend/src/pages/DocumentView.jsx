@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getDocument } from '../api/documents';
+import { getDocuments } from '../api/documentApi';
 
 export default function DocumentView() {
   const { id } = useParams();
@@ -8,7 +8,7 @@ export default function DocumentView() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getDocument(id).then(r => setDoc(r.data)).catch(() => {}).finally(() => setLoading(false));
+    getDocuments(id).then(r => setDoc(r.data)).catch(() => {}).finally(() => setLoading(false));
   }, [id]);
 
   if (loading) return <div className="page-wrap" style={{display:'flex',justifyContent:'center',paddingTop:80}}><div className="spinner"></div></div>;

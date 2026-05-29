@@ -5,6 +5,8 @@ import jar.service.LegalDocumentService;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -48,4 +50,13 @@ public class LegalDocumentController {
                     );
         }
     }
+
+                    @GetMapping("/my-documents")
+                public List<DocumentResponse>
+                getMyDocuments(
+                        Authentication authentication) {
+                        
+                    return service.getMyDocuments(
+                            authentication.getName());
+        }
 }

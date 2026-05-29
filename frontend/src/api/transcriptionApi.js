@@ -19,3 +19,12 @@ export const uploadAudio = async (file) => {
 
     return response.data;
 };
+
+export const getTranscriptions = async () => {
+
+    const response = await api.get(
+        "/Transcription/my-transcriptions"
+    );
+
+    return response.data;
+};

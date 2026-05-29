@@ -2,6 +2,7 @@ package jar.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,4 +34,13 @@ public class TranscriptionController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/my-transcriptions")
+public List<TranscriptionResponse>
+getMyTranscriptions(
+        Principal principal) {
+
+    return service.getMyTranscriptions(
+            principal.getName());
+}
 }

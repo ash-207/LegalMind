@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-//import { uploadDocument } from '../api/documents';
 import { uploadPdf } from "../api/documentApi";
 import './Upload.css';
 

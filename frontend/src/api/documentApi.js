@@ -19,3 +19,12 @@ export const uploadPdf = async (file) => {
 
     return response.data;
 };
+
+export const getDocuments = async () => {
+
+    const response = await api.get(
+        "/documents/my-documents"
+    );
+
+    return response.data;
+};

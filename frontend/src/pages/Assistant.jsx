@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import api from '../api/client';
+import api from '../api/axios';
 import './Assistant.css';
 
 export default function Assistant() {

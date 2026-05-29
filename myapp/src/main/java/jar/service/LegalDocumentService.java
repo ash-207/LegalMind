@@ -3,6 +3,7 @@ package jar.service;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -85,7 +86,7 @@ String filePath =
 
         document.setOriginalText(extractedText);
 
-        // Temporary summary
+        // Summary from ml_service FastAPI
        String summary =
         fastApiClient.generateSummary(
                 extractedText
@@ -115,4 +116,27 @@ String filePath =
                                 .getEmail())
                 .build();
     }
+
+    public List<DocumentResponse>
+getMyDocuments(String email) {
+
+    User user = userRepository
+            .findByEmail(email)
+            .orElseThrow();
+
+    return repository
+            .findByUploadedBy(user)
+            .stream()
+            .map(doc ->
+                    DocumentResponse.builder()
+                            .id(doc.getId())
+                            .title(doc.getTitle())
+                            .summary(doc.getSummary())
+                            .uploadedAt(doc.getUploadedAt())
+                            .uploadedBy(
+                                    doc.getUploadedBy()
+                                            .getEmail())
+                            .build())
+            .toList();
+}
 }

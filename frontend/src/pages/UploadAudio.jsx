@@ -1,5 +1,4 @@
 import { useState, useRef } from 'react';
-//import { uploadAudio } from '../api/transcriptions';
 import { uploadAudio } from "../api/transcriptionApi";
 import './Upload.css';
 

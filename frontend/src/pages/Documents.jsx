@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getDocuments } from '../api/documents';
+import { getDocuments } from '../api/documentApi';
 import './List.css';
 
 export default function Documents() {
@@ -9,8 +9,17 @@ export default function Documents() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getDocuments().then(r => setDocs(r.data)).catch(() => setDocs([])).finally(() => setLoading(false));
-  }, []);
+  getDocuments()
+    .then(r => {
+      console.log(r);
+      setDocs(r);
+    })
+    .catch(err => {
+      console.error(err);
+      setDocs([]);
+    })
+    .finally(() => setLoading(false));
+}, []);
 
   const filtered = docs.filter(d =>
     d.title?.toLowerCase().includes(search.toLowerCase())

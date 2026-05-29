@@ -3,6 +3,7 @@ package jar.service;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
@@ -130,4 +131,30 @@ public class TranscriptionService {
                                 .getEmail())
                 .build();
     }
+    public List<TranscriptionResponse>
+getMyTranscriptions(String email) {
+
+    User user = userRepository
+            .findByEmail(email)
+            .orElseThrow();
+
+    return repository
+            .findByUploadedBy(user)
+            .stream()
+            .map(t ->
+                    TranscriptionResponse
+                            .builder()
+                            .id(t.getId())
+                            .fileName(
+                                    t.getFileName())
+                            .transcription(
+                                    t.getTranscription())
+                            .uploadedAt(
+                                    t.getUploadedAt())
+                            .uploadedBy(
+                                    t.getUploadedBy()
+                                            .getEmail())
+                            .build())
+            .toList();
+}
 }

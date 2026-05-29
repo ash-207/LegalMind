@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getTranscriptions } from '../api/transcriptions';
+import { getTranscriptions } from '../api/transcriptionApi';
 import './List.css';
 
 export default function Transcriptions() {
@@ -8,8 +8,17 @@ export default function Transcriptions() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getTranscriptions().then(r => setItems(r.data)).catch(() => setItems([])).finally(() => setLoading(false));
-  }, []);
+  getTranscriptions()
+    .then(data => {
+      console.log(data);
+      setItems(data);
+    })
+    .catch(err => {
+      console.error(err);
+      setItems([]);
+    })
+    .finally(() => setLoading(false));
+}, []);
 
   return (
     <div className="page-wrap">
@@ -33,11 +42,16 @@ export default function Transcriptions() {
               <div className="list-card-icon">🎙</div>
               <div className="list-card-body">
                 <h3 className="list-card-title">{t.title || t.fileName || 'Hearing'}</h3>
-                <p className="list-card-preview">{t.summary?.substring(0, 120) || t.fullText?.substring(0, 120)}...</p>
+                <p className="list-card-preview">{t.transcription?.substring(0, 120)}...</p>
                 <div className="list-card-meta">
-                  <span className="chip">{t.language || 'en'}</span>
-                  <span className="chip">{t.duration ? `${Math.round(t.duration/60)}m` : ''}</span>
-                </div>
+                <span className="chip">
+                  {new Date(t.uploadedAt).toLocaleDateString()}
+                </span>
+                        
+                <span className="chip">
+                  {t.uploadedBy}
+                </span>
+              </div>
               </div>
             </Link>
           ))}
